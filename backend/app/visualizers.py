@@ -232,7 +232,7 @@ class HospitalPriorityDemo(ClassroomDemo):
         return sorted(HOSP_ZONES, key=sort_key)
 
     def _priority(self, order):
-        essentials = [(z, item) for z in HOSP_ZONES for item in HOSP_LOADS[z] if item[3]]
+        essentials = [(z, item) for z in order for item in HOSP_LOADS[z] if item[3]]
         optionals = [(z, item) for z in order for item in HOSP_LOADS[z] if not item[3]]
         return essentials + optionals
 
