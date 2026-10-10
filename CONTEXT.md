@@ -184,3 +184,7 @@ The active site is one validated JSON profile (`SITE_PROFILE`, default `backend/
 ## Main sync on issue #19 branch — 2026-10-10
 
 Merged `origin/main` into `codex/issue-19-ranked-evaluation` after the ranked v3 evaluation. The merge brings the configurable site profiles, appliance-level allocator and power-system `/demo` into the same branch as the held-out results. No unresolved paths or conflict markers remain; `git diff --check` passes. Full backend tests pass with a temporary `PRIORITYGRID_HISTORY_DB`: **395 passed, 2 skipped**. Frontend build and component tests passed during merge verification. No hardware checks or physical acceptance were run. Next: review the combined app in a browser, then continue the pending hardware A/B transport and catalog reconciliation work.
+
+### Issue #63: Make SHIFT/GDM district topology generation reproducible
+Added 	ools/setup_shift_and_generate.py script to automate obtaining the exact licensed SHIFT commit from https://github.com/NLR-Distribution-Suite/shift.git, setting up an isolated .venv-city runtime, and regenerating the GNITC topology deterministically without manual edits. The script avoids polluting the normal backend install with GIS/GDM dependencies. 
+Verified by running python tools/setup_shift_and_generate.py, which checked out commit 995004c, generated 31 nodes and 31 edges identically to the checked-in topology, and then passed 	est_district_topology_generator.py locally within .venv-city. No physical grid model or runtime network calls are used.

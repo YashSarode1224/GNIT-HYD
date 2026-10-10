@@ -1,8 +1,7 @@
 """Regenerate the checked-in GNITC topology using SHIFT at 995004c84c16df7c8ebfd3ddddf3e723a0938a99.
 
-From the repository root: `python3.12 -m venv .venv-city`,
-`.venv-city/bin/python -m pip install -e sources/shift`, then
-`.venv-city/bin/python backend/scripts/generate_district_topology.py`.
+From the repository root, run the automated setup and generation script:
+`python tools/setup_shift_and_generate.py`
 """
 from __future__ import annotations
 
