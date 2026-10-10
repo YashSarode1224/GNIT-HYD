@@ -1,57 +1,289 @@
-.power-map { border: 1px solid var(--surface-border-strong); border-radius: var(--radius-md); overflow: hidden; background: var(--surface-color); }
-.power-map__toolbar { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 18px; border-bottom:1px solid var(--surface-border); }
-.power-map__eyebrow { font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); font-weight:700; }
-.power-map h2 { margin:3px 0 0; font-size:1.15rem; }
-.power-map__legend { display:flex; flex-wrap:wrap; gap:14px; color:var(--text-muted); font-size:.75rem; }
-.power-map__legend span { display:flex; align-items:center; gap:6px; }
-.power-map__legend i { width:18px; border-top:3px dashed #9da59c; }
-.power-map__legend .live { border-top:3px solid #d99518; box-shadow:0 0 5px #ffc14f; }
-.power-map__viewport { overflow-x:auto; overscroll-behavior-x:contain; }
-.power-map__viewport:focus-visible { outline:3px solid #2563eb; outline-offset:-3px; }
-.power-map__drawing { display:block; width:100%; min-width:800px; }
-.power-map__map-note { fill:#6c776b; font:600 9px ui-monospace,monospace; letter-spacing:.6px; }
-.power-map__room-name { fill:#36453c; font:800 16px ui-monospace,monospace; }
-.power-map__fixture-label { fill:#59665b; font:700 8px ui-monospace,monospace; letter-spacing:.3px; }
-.power-map__feed-label { fill:#59665b; font:600 10px ui-monospace,monospace; }
-.power-map__source-text { fill:#f4f2df; font:700 12px ui-monospace,monospace; }
-.power-map__circuit path { fill:none; stroke-linejoin:miter; stroke-linecap:square; }
-.power-map__cable-bed { stroke:#f9f8ed; stroke-width:9; opacity:.85; }
-.power-map__cable { stroke:#c29a48; stroke-width:5; }
-.power-map__current { stroke:#fff6bc; stroke-width:3; stroke-dasharray:3 17; animation:power-travel .85s linear infinite; filter:drop-shadow(0 0 3px #ffb100); }
-.power-map__circuit.is-main .power-map__cable-bed { stroke:#b4aa8c; stroke-width:13; }
-.power-map__circuit.is-main .power-map__cable { stroke:#da9a28; stroke-width:8; }
-.power-map__circuit.is-main .power-map__current { stroke-width:4; }
-.power-map__circuit.is-off .power-map__cable { stroke:#a5ada4; stroke-width:3; stroke-dasharray:4 5; opacity:.65; }
-.power-map__circuit.is-off .power-map__cable-bed { stroke-width:5; opacity:.5; }
-.power-map__fan { transform-box:fill-box; transform-origin:center; }
-.power-map__fan.is-spinning { animation:power-fan 2s linear infinite; }
-.power-map__air { fill:none; stroke:#6ea7b6; stroke-width:2; stroke-dasharray:3 5; animation:power-travel 1s linear infinite; }
-.power-map.is-stale * { animation-play-state:paused !important; }
-.power-map__room-ledger { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border-top:1px solid var(--surface-border); }
-.power-map__room-ledger article { padding:14px; min-width:0; }
-.power-map__room-ledger article + article { border-left:1px solid var(--surface-border); }
-.power-map__room-ledger article.is-selected { background:#fcf8e9; }
-.power-map__room-ledger header { display:flex; justify-content:space-between; gap:6px; margin-bottom:10px; font-size:.83rem; }
-.power-map__room-ledger header span { color:var(--text-muted); font-size:.7rem; }
-.power-map__loads { display:grid; gap:7px; }
-.power-map__loads > span { display:flex; align-items:center; gap:6px; font-size:.75rem; color:var(--text-muted); }
-.power-map__loads i { width:6px; height:6px; background:#c39031; }
-.power-map__loads b { margin-left:auto; font:700 .65rem ui-monospace,monospace; color:#966616; }
-.power-map__loads .is-off i { background:#9ca59c; }
-.power-map__loads .is-off b { color:#7c857d; }
-@keyframes power-travel { to { stroke-dashoffset:-40; } }
-@keyframes power-fan { to { transform:rotate(360deg); } }
-@media(max-width:640px) { .power-map__toolbar { align-items:flex-start; flex-direction:column; } .power-map__room-ledger { grid-template-columns:1fr; } .power-map__room-ledger article + article { border-left:0; border-top:1px solid var(--surface-border); } .power-map__viewport::after { content:'Scroll sideways to follow all three room circuits'; display:block; font-size:.75rem; color:var(--text-muted); padding:9px 14px; } }
-@media(prefers-reduced-motion:reduce) { .power-map * { animation:none !important; } }
+.power-map {
+  border: none;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--neo-bg);
+}
+.power-map__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--surface-border);
+}
+.power-map__eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+.power-map h2 {
+  margin: 3px 0 0;
+  font-size: 1.15rem;
+}
+.power-map__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+.power-map__legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.power-map__legend i {
+  width: 18px;
+  border-top: 3px dashed #9da59c;
+}
+.power-map__legend .live {
+  border-top: 3px solid #d99518;
+  box-shadow: var(--neo-shadow);
+}
+.power-map__viewport {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.power-map__viewport:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: -3px;
+}
+.power-map__drawing {
+  display: block;
+  width: 100%;
+  min-width: 800px;
+}
+.power-map__map-note {
+  fill: #6c776b;
+  font:
+    600 9px ui-monospace,
+    monospace;
+  letter-spacing: 0.6px;
+}
+.power-map__room-name {
+  fill: #36453c;
+  font:
+    800 16px ui-monospace,
+    monospace;
+}
+.power-map__fixture-label {
+  fill: #59665b;
+  font:
+    700 8px ui-monospace,
+    monospace;
+  letter-spacing: 0.3px;
+}
+.power-map__feed-label {
+  fill: #59665b;
+  font:
+    600 10px ui-monospace,
+    monospace;
+}
+.power-map__source-text {
+  fill: #f4f2df;
+  font:
+    700 12px ui-monospace,
+    monospace;
+}
+.power-map__circuit path {
+  fill: none;
+  stroke-linejoin: miter;
+  stroke-linecap: square;
+}
+.power-map__cable-bed {
+  stroke: #f9f8ed;
+  stroke-width: 9;
+  opacity: 0.85;
+}
+.power-map__cable {
+  stroke: #c29a48;
+  stroke-width: 5;
+}
+.power-map__current {
+  stroke: #fff6bc;
+  stroke-width: 3;
+  stroke-dasharray: 3 17;
+  animation: power-travel 0.85s linear infinite;
+  filter: drop-shadow(0 0 3px #ffb100);
+}
+.power-map__circuit.is-main .power-map__cable-bed {
+  stroke: #b4aa8c;
+  stroke-width: 13;
+}
+.power-map__circuit.is-main .power-map__cable {
+  stroke: #da9a28;
+  stroke-width: 8;
+}
+.power-map__circuit.is-main .power-map__current {
+  stroke-width: 4;
+}
+.power-map__circuit.is-off .power-map__cable {
+  stroke: #a5ada4;
+  stroke-width: 3;
+  stroke-dasharray: 4 5;
+  opacity: 0.65;
+}
+.power-map__circuit.is-off .power-map__cable-bed {
+  stroke-width: 5;
+  opacity: 0.5;
+}
+.power-map__fan {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.power-map__fan.is-spinning {
+  animation: power-fan 2s linear infinite;
+}
+.power-map__air {
+  fill: none;
+  stroke: #6ea7b6;
+  stroke-width: 2;
+  stroke-dasharray: 3 5;
+  animation: power-travel 1s linear infinite;
+}
+.power-map.is-stale * {
+  animation-play-state: paused !important;
+}
+.power-map__room-ledger {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--surface-border);
+}
+.power-map__room-ledger article {
+  padding: 14px;
+  min-width: 0;
+}
+.power-map__room-ledger article + article {
+  border-left: 1px solid var(--surface-border);
+}
+.power-map__room-ledger article.is-selected {
+  background: #fcf8e9;
+}
+.power-map__room-ledger header {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 0.83rem;
+}
+.power-map__room-ledger header span {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+.power-map__loads {
+  display: grid;
+  gap: 7px;
+}
+.power-map__loads > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.power-map__loads i {
+  width: 6px;
+  height: 6px;
+  background: #c39031;
+}
+.power-map__loads b {
+  margin-left: auto;
+  font:
+    700 0.65rem ui-monospace,
+    monospace;
+  color: #966616;
+}
+.power-map__loads .is-off i {
+  background: #9ca59c;
+}
+.power-map__loads .is-off b {
+  color: #7c857d;
+}
+@keyframes power-travel {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+@keyframes power-fan {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 640px) {
+  .power-map__toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .power-map__room-ledger {
+    grid-template-columns: 1fr;
+  }
+  .power-map__room-ledger article + article {
+    border-left: 0;
+    border-top: 1px solid var(--surface-border);
+  }
+  .power-map__viewport::after {
+    content: "Scroll sideways to follow all three room circuits";
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 9px 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .power-map * {
+    animation: none !important;
+  }
+}
 /* Edge states (#23): each state has its own line style and a text label in the legend and ledger. */
-.power-map__circuit.state-PENDING_RESTORATION .power-map__cable { stroke:#d6a02a; stroke-width:4; stroke-dasharray:2 4; }
-.power-map__circuit.state-SHED .power-map__cable { stroke:#a5ada4; stroke-width:3; stroke-dasharray:4 5; opacity:.65; }
-.power-map__circuit.state-SHED .power-map__cable-bed { stroke-width:5; opacity:.5; }
-.power-map__circuit.state-OPEN .power-map__cable { stroke:#b54a4a; stroke-width:3; stroke-dasharray:8 6; }
-.power-map__circuit.state-OPEN .power-map__cable-bed { stroke-width:5; opacity:.4; }
-.power-map__circuit.state-UNKNOWN .power-map__cable { stroke:#7c6fa8; stroke-width:3; stroke-dasharray:1 4; }
-.power-map__legend .pending { border-top:3px dashed #d6a02a; }
-.power-map__legend .open { border-top:3px dashed #b54a4a; }
-.power-map__legend .unknown { border-top:3px dotted #7c6fa8; }
-.power-map__stale-note { color:var(--status-err); font-weight:700; }
-.power-map__footnote { margin:0; padding:10px 14px; border-top:1px solid var(--surface-border); color:var(--text-muted); font-size:.72rem; }
+.power-map__circuit.state-PENDING_RESTORATION .power-map__cable {
+  stroke: #d6a02a;
+  stroke-width: 4;
+  stroke-dasharray: 2 4;
+}
+.power-map__circuit.state-SHED .power-map__cable {
+  stroke: #a5ada4;
+  stroke-width: 3;
+  stroke-dasharray: 4 5;
+  opacity: 0.65;
+}
+.power-map__circuit.state-SHED .power-map__cable-bed {
+  stroke-width: 5;
+  opacity: 0.5;
+}
+.power-map__circuit.state-OPEN .power-map__cable {
+  stroke: #b54a4a;
+  stroke-width: 3;
+  stroke-dasharray: 8 6;
+}
+.power-map__circuit.state-OPEN .power-map__cable-bed {
+  stroke-width: 5;
+  opacity: 0.4;
+}
+.power-map__circuit.state-UNKNOWN .power-map__cable {
+  stroke: #7c6fa8;
+  stroke-width: 3;
+  stroke-dasharray: 1 4;
+}
+.power-map__legend .pending {
+  border-top: 3px dashed #d6a02a;
+}
+.power-map__legend .open {
+  border-top: 3px dashed #b54a4a;
+}
+.power-map__legend .unknown {
+  border-top: 3px dotted #7c6fa8;
+}
+.power-map__stale-note {
+  color: var(--status-err);
+  font-weight: 700;
+}
+.power-map__footnote {
+  margin: 0;
+  padding: 10px 14px;
+  border-top: 1px solid var(--surface-border);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}

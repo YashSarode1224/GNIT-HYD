@@ -62,23 +62,23 @@
   text-decoration: none;
   font-weight: 600;
   transition: all 0.2s;
-  border: 1px solid transparent;
+  border: none;
   display: inline-block;
 }
 .btn-primary:hover {
   background: var(--accent-primary-hover);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--neo-shadow);
 }
 
 .btn-secondary {
-  background: var(--surface-color);
+  background-color: var(--neo-bg);
   color: var(--text-main);
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
   text-decoration: none;
   font-weight: 600;
   transition: all 0.2s;
-  border: 1px solid var(--surface-border-strong);
+  border: none;
   display: inline-block;
 }
 .btn-secondary:hover {
@@ -136,10 +136,10 @@
   font-size: 0.9rem;
   color: var(--text-main);
   margin-bottom: 3rem;
-  background: var(--surface-color);
+  background-color: var(--neo-bg);
   padding: 1rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--surface-border-strong);
+  border: none;
 }
 
 .workflow-steps span {
@@ -161,15 +161,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--surface-color);
+  background-color: var(--neo-bg);
   padding: 3rem;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--surface-border-strong);
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.1); /* Brutalist shadow */
+  border: none;
+  box-shadow: var(--neo-shadow); /* Brutalist shadow */
 }
 
 .node {
-  background: var(--surface-color);
+  background-color: var(--neo-bg);
   border: 2px solid var(--surface-border-strong);
   padding: 1rem 2rem;
   border-radius: var(--radius-sm);
@@ -229,7 +229,7 @@
   padding: 5rem 0;
 }
 .content-section.alternate {
-  background-color: var(--surface-color);
+  background-color: var(--neo-bg);
   border-top: 1px solid var(--surface-border-strong);
   border-bottom: 1px solid var(--surface-border-strong);
 }
@@ -262,11 +262,11 @@
 }
 
 .feature-panel {
-  background: var(--surface-color);
-  border: 1px solid var(--surface-border-strong);
+  background-color: var(--neo-bg);
+  border: none;
   border-radius: var(--radius-md);
   padding: 2.5rem;
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+  box-shadow: var(--neo-shadow);
   transition: transform 0.2s;
 }
 .feature-panel:hover {
@@ -331,7 +331,7 @@
   background: var(--bg-color);
   margin-bottom: 1rem;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--surface-border);
+  border: none;
   color: var(--text-main);
   font-weight: 500;
 }
@@ -343,15 +343,15 @@
   background: var(--bg-color);
   padding: 2.5rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--surface-border);
+  border: none;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .flow-box {
-  background: var(--surface-color);
-  border: 1px solid var(--surface-border-strong);
+  background-color: var(--neo-bg);
+  border: none;
   padding: 1rem 2rem;
   border-radius: var(--radius-sm);
   color: var(--text-main);
@@ -372,15 +372,15 @@
 
 /* LIMITATIONS */
 .limitations-box {
-  background: var(--surface-color); 
-  border: 1px solid var(--surface-border-strong);
+  background-color: var(--neo-bg);
+  border: none;
   border-left: 4px solid var(--status-err);
   border-radius: var(--radius-sm);
   padding: 2.5rem;
   display: flex;
   gap: 2rem;
   align-items: flex-start;
-  box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+  box-shadow: var(--neo-shadow);
 }
 
 .warning-icon {
@@ -403,7 +403,7 @@
 .final-cta {
   text-align: center;
   padding: 8rem 2rem;
-  background-color: var(--surface-color);
+  background-color: var(--neo-bg);
   border-top: 1px solid var(--surface-border-strong);
 }
 .final-cta h2 {

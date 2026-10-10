@@ -1,6 +1,6 @@
 .incident-timeline {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background-color: var(--neo-bg);
+  border: none;
   border-radius: 8px;
   padding: 1rem;
   display: flex;
@@ -44,15 +44,18 @@
 }
 
 /* Event type colors */
-.type-fault-detected, .type-critical-shortfall {
+.type-fault-detected,
+.type-critical-shortfall {
   border-left-color: #ef4444;
 }
 
-.type-capacity-change, .type-feeder-change {
+.type-capacity-change,
+.type-feeder-change {
   border-left-color: #f59e0b;
 }
 
-.type-rfid-scan, .type-card-recognized {
+.type-rfid-scan,
+.type-card-recognized {
   border-left-color: #10b981;
 }
 

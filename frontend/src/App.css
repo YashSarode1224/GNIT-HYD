@@ -1,10 +1,22 @@
 @import "tailwindcss";
 
 @media (max-width: 900px) {
-  .site-header { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: .55rem; padding: .65rem .75rem; }
-  .site-header > :first-child { grid-area: 1 / 1; }
-  .site-header > :nth-child(2) { grid-area: 2 / 1 / 3 / 3; min-width: 0; }
-  .site-header > :last-child { grid-area: 1 / 2; }
+  .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    gap: 0.55rem;
+    padding: 0.65rem 0.75rem;
+  }
+  .site-header > :first-child {
+    grid-area: 1 / 1;
+  }
+  .site-header > :nth-child(2) {
+    grid-area: 2 / 1 / 3 / 3;
+    min-width: 0;
+  }
+  .site-header > :last-child {
+    grid-area: 1 / 2;
+  }
 }
 
 @plugin "tailwindcss-animate";
@@ -12,8 +24,22 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Neomorphism Theme Tokens */
+  --neo-bg: #e0e5ec;
+  --neo-shadow:
+    9px 9px 16px rgba(163, 177, 198, 0.6),
+    -9px -9px 16px rgba(255, 255, 255, 0.5);
+  --neo-shadow-inset:
+    inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7),
+    inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
+  --neo-shadow-sm:
+    5px 5px 10px rgba(163, 177, 198, 0.6),
+    -5px -5px 10px rgba(255, 255, 255, 0.5);
+  --neo-text: #4d5969;
+  --neo-text-muted: #8a9bb0;
+
   /* Vintage Theme Tokens */
-  --bg-vintage: #fffdf7;
+  --bg-vintage: var(--neo-bg);
   --brand-forest: #166534;
   --brand-earth: #854d0e;
   --brand-sand: #e8dcc4;
@@ -106,35 +132,37 @@
 }
 
 /* Global resets and Light Theme Variables */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 :root {
   /* Vintage Theme Tokens */
-  --bg-vintage: #fffdf7;
+  --bg-vintage: var(--neo-bg);
   --brand-forest: #166534;
   --brand-earth: #854d0e;
   --brand-sand: #e8dcc4;
   --brand-sand-dark: #d4c5ab;
   /* Minimalist Graph Theme - Light */
-  --bg-color: #fffdf7; /* Very light yellow/off-white */
+  --bg-color: var(--neo-bg); /* Very light yellow/off-white */
   --grid-line: rgba(0, 0, 0, 0.05); /* Subtle grid line */
-  
-  --text-main: #111827; /* Near black */
+
+  --text-main: var(--neo-text); /* Near black */
   --text-muted: #4b5563; /* Dark gray for secondary text */
-  --text-on-dark: #ffffff; 
-  
-  --surface-color: #ffffff;
-  --surface-border: #e5e7eb;
+  --text-on-dark: #ffffff;
+
+  --surface-color: var(--neo-bg);
+  --surface-border: transparent;
   --surface-border-strong: #000000;
-  
+
   /* Non-neon, professional accents */
   --accent-primary: #111827; /* Black for primary buttons */
   --accent-primary-hover: #374151;
   --accent-secondary: #f3f4f6;
   --accent-secondary-hover: #e5e7eb;
-  
+
   /* Status Colors (Muted, accessible, non-neon) */
   --status-ok: #166534; /* Dark green */
   --status-ok-bg: #dcfce7;
@@ -142,7 +170,7 @@
   --status-err-bg: #fee2e2;
   --status-warn: #854d0e; /* Dark yellow/brown */
   --status-warn-bg: #fef9c3;
-  
+
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
@@ -151,11 +179,15 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
   background-color: var(--bg-color);
   color: var(--text-main);
   /* Graph paper effect */
-  background-image: 
+  background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 20px 20px;
@@ -172,7 +204,7 @@ button {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-vintage);
+  background-color: var(--neo-bg);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--brand-sand-dark);
@@ -197,8 +229,69 @@ button {
 
 /* Global Button Active State */
 button {
-  transition: transform 0.1s ease, opacity 0.2s ease;
+  transition:
+    transform 0.1s ease,
+    opacity 0.2s ease;
 }
 button:active:not(:disabled) {
   transform: scale(0.98);
+}
+
+/* Global Neo Overrides */
+body,
+#root,
+.app {
+  background-color: var(--neo-bg) !important;
+  color: var(--neo-text) !important;
+}
+
+button {
+  background-color: var(--neo-bg) !important;
+  box-shadow: var(--neo-shadow-sm) !important;
+  color: var(--neo-text) !important;
+  border: none !important;
+  border-radius: 8px !important;
+}
+
+button:active:not(:disabled) {
+  box-shadow: var(--neo-shadow-inset) !important;
+}
+
+button:disabled {
+  opacity: 0.6;
+  box-shadow: none !important;
+}
+
+.district-card,
+.hospital-card,
+.classroom-card,
+.dashboard-card,
+.metric-card {
+  background-color: var(--neo-bg) !important;
+  box-shadow: var(--neo-shadow) !important;
+  border: none !important;
+  border-radius: 12px !important;
+}
+
+.district-status,
+.hospital-status {
+  background-color: var(--neo-bg) !important;
+  box-shadow: var(--neo-shadow-inset) !important;
+  border: none !important;
+}
+
+/* Landing Page Neo Overrides */
+.landing-page,
+.hero,
+.features,
+.site-header,
+.site-footer {
+  background-color: var(--neo-bg) !important;
+}
+
+.feature-card,
+.glass-card {
+  background-color: var(--neo-bg) !important;
+  box-shadow: var(--neo-shadow) !important;
+  border: none !important;
 }
