@@ -13,7 +13,7 @@ import uuid
 
 FIXTURE_DIR = Path(__file__).resolve().parents[2] / "frontend" / "src" / "test" / "fixtures"
 VOLATILE = {"generated_at", "sent_at", "run_id", "last_tick_at", "timestamp", "observed_at", "recorded_at",
-            "server_epoch", "event_id", "command_id", "decision_id", "last_restored", "last_shed", "stable_since", "now_s"}
+            "server_epoch", "event_id", "command_id", "decision_id", "last_restored", "last_shed", "stable_since", "now_s", "observation_time"}
 
 
 def scrub(value):

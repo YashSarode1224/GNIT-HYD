@@ -284,6 +284,24 @@ export default function DemoDashboard() {
             )}
 
             <div className="control-group">
+              <h3>Session Management</h3>
+              <p className="control-desc">Start a fresh allocation scenario.</p>
+              <button 
+                className="btn-outline" 
+                disabled={actionPending || historyData.selection.mode === 'HISTORY'} 
+                onClick={async () => {
+                  if (actionPending) return;
+                  setActionPending(true);
+                  try {
+                    await import('../api').then(m => m.postNewRun());
+                  } finally {
+                    setActionPending(false);
+                  }
+                }}
+              >Start New Run</button>
+            </div>
+
+            <div className="control-group">
               <h3>RFID Selection</h3>
               <p className="control-desc">Simulate a physical card scan.</p>
               <button className="btn-outline" disabled={actionPending || historyData.selection.mode === 'HISTORY'} onClick={() => doRfidScan('CARD_1_UID')}>Scan Classroom 1</button>

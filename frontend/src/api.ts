@@ -1,4 +1,4 @@
-import type { components } from './schema';
+﻿import type { components } from './schema';
 import { 
   Snapshot, 
   HealthResponse, 
@@ -178,4 +178,8 @@ export async function getPowerSystem(signal?: AbortSignal): Promise<components['
 
 export async function requestAppliance(appliance_id: string, requested: boolean): Promise<components['schemas']['ApplianceRequestResponse']> {
   return fetchJson('/api/v1/appliances/request', { method: 'POST', body: JSON.stringify({ appliance_id, requested }) });
+}
+
+export async function postNewRun(): Promise<components['schemas']['SiteIdentityResponse']> {
+  return fetchJson<components['schemas']['SiteIdentityResponse']>('/api/v1/site/new-run', { method: 'POST' });
 }

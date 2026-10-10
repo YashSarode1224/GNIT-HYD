@@ -1565,7 +1565,7 @@
     "FEEDER_A"
    ],
    "detail": "Likely interruption on feeder A.",
-   "evaluated_at": "2026-10-10T03:15:55.663872+00:00",
+   "evaluated_at": "2026-10-10T08:16:08.826782+00:00",
    "hypotheses": [
     {
      "asset_id": "FEEDER_A",
@@ -2181,20 +2181,20 @@
    "type": "DIAGNOSIS_UPDATED"
   },
   {
+   "description": "Ranked telemetry diagnosis: #1 FEEDER_DISCONNECTED at FEEDER_A",
+   "event_id": "<volatile>",
+   "revision": 3,
+   "run_id": "<volatile>",
+   "timestamp": "<volatile>",
+   "type": "DIAGNOSIS_UPDATED"
+  },
+  {
    "description": "Source capacity set to 6000W",
    "event_id": "<volatile>",
    "revision": 4,
    "run_id": "<volatile>",
    "timestamp": "<volatile>",
    "type": "CAPACITY_CHANGE"
-  },
-  {
-   "description": "Ranked telemetry diagnosis: #1 FEEDER_DISCONNECTED at FEEDER_A",
-   "event_id": "<volatile>",
-   "revision": 4,
-   "run_id": "<volatile>",
-   "timestamp": "<volatile>",
-   "type": "DIAGNOSIS_UPDATED"
   }
  ],
  "faults": [
@@ -2321,14 +2321,14 @@
   "proposed_violations": [],
   "restoration": {
    "after_shed_required_s": 3,
-   "since_last_shed_s": 0.06,
-   "stable_for_s": 0.02,
+   "since_last_shed_s": 0.09,
+   "stable_for_s": 0.01,
    "stable_required_s": 5,
    "step_s": 1
   },
-  "solve_ms": 8.76,
+  "solve_ms": 9.06,
   "solver": "OR-Tools CP-SAT 9.15.6755",
-  "solves": 8,
+  "solves": 9,
   "stages": [
    {
     "stage": "class:hospital_critical",

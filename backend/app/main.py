@@ -619,6 +619,14 @@ async def switch_site_scenario(request: Request, req: SiteScenarioRequest):
     return {**site.read(lambda: _site_scenarios(site))[0], "command": receipt}
 
 
+@router.post("/api/v1/site/new-run", response_model=SiteIdentityResponse)
+async def create_new_run(request: Request):
+    """Start a completely new identity generation run."""
+    site = request.app.state.site
+    site.new_run()
+    return site.identity()
+
+
 @router.get("/api/v1/allocation/policy", response_model=AllocationPolicyResponse)
 async def read_allocation_policy(request: Request):
     grid = request.app.state.grid

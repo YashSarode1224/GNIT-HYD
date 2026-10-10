@@ -707,6 +707,35 @@
         }
       }
     },
+    "/api/v1/site/new-run": {
+      "post": {
+        "summary": "Create New Run",
+        "description": "Start a completely new identity generation run.",
+        "operationId": "post_api_v1_site_new_run",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SiteIdentityResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/allocation/policy": {
       "get": {
         "summary": "Read Allocation Policy",

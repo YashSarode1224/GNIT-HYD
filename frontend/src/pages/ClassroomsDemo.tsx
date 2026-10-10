@@ -112,10 +112,19 @@ export default function ClassroomsDemo() {
     <div className="classroom-demo__layout">
       <section className="classroom-demo__main" aria-label="Classroom power state">
         <div className="classroom-demo__metrics">
-          <div className="classroom-demo__metric"><span className="classroom-demo__metric-label">Classroom supply</span><span className="classroom-demo__metric-value">{snapshot.effective_capacity_w.toLocaleString()} W</span>{snapshot.limited_by === 'campus feeder B' && <span className="classroom-demo__metric-note">Limited by campus feeder B ({(snapshot.campus_limit_w ?? 0).toLocaleString()} W)</span>}</div>
-          <div className="classroom-demo__metric"><span className="classroom-demo__metric-label">Requested</span><span className="classroom-demo__metric-value">{snapshot.requested_w.toLocaleString()} W</span></div>
-          <div className="classroom-demo__metric"><span className="classroom-demo__metric-label">Served</span><span className="classroom-demo__metric-value">{snapshot.served_w.toLocaleString()} W</span></div>
-          <div className="classroom-demo__metric"><span className="classroom-demo__metric-label">Unmet</span><span className="classroom-demo__metric-value">{snapshot.shortfall_w.toLocaleString()} W</span></div>
+          <div className="classroom-demo__metric">
+            <span className="classroom-demo__metric-label">Campus Capacity (Total)</span>
+            <span className="classroom-demo__metric-value">{snapshot.contract.campus_totals?.capacity_w?.toLocaleString() ?? '?'} W</span>
+            <span className="classroom-demo__metric-note">Served: {snapshot.contract.campus_totals?.served_w.toLocaleString() ?? 0} W</span>
+          </div>
+          <div className="classroom-demo__metric">
+            <span className="classroom-demo__metric-label">Classroom View Supply</span>
+            <span className="classroom-demo__metric-value">{snapshot.effective_capacity_w.toLocaleString()} W</span>
+            {snapshot.limited_by === 'campus feeder B' && <span className="classroom-demo__metric-note">Limited by campus feeder B ({(snapshot.campus_limit_w ?? 0).toLocaleString()} W)</span>}
+          </div>
+          <div className="classroom-demo__metric"><span className="classroom-demo__metric-label">View Requested</span><span className="classroom-demo__metric-value">{snapshot.requested_w.toLocaleString()} W</span></div>
+          <div className="classroom-demo__metric"><span className="classroom-demo__metric-label">View Served</span><span className="classroom-demo__metric-value">{snapshot.served_w.toLocaleString()} W</span></div>
+          <div className="classroom-demo__metric"><span className="classroom-demo__metric-label">View Unmet</span><span className="classroom-demo__metric-value">{snapshot.shortfall_w.toLocaleString()} W</span></div>
         </div>
         <section className="classroom-demo__panel classroom-demo__ml" aria-labelledby="classroom-ml-title">
           <header className="classroom-demo__ml-head">
