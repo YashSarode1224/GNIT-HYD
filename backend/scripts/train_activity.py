@@ -9,7 +9,10 @@ import io
 import json
 import math
 import platform
-import resource
+try:
+    import resource
+except ImportError:
+    resource = None
 import statistics
 import sys
 import time

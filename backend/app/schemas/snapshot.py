@@ -59,7 +59,7 @@ class HospitalZone(BaseModel):
     rooms: List[HospitalRoom]
 
 class ClassroomZone(BaseModel):
-    active_classroom_id: Optional[str] = None
+    active_classroom_ids: List[str] = Field(default_factory=list)
     recent_rfid_scan: Optional[str] = None
     rfid_reader_status: RfidReaderStatus = RfidReaderStatus.NOT_CONNECTED
     classrooms: List[ClassroomInfo]
@@ -79,6 +79,17 @@ class FaultDiagnosis(BaseModel):
     severity: str
     status: str
 
+
+class ApplianceSnapshot(BaseModel):
+    id: str
+    name: str
+    room: str
+    tier: str
+    watts: int
+    requested: bool
+    modeled_served: bool
+    model_reason: str
+
 class SystemSnapshot(BaseModel):
     control_revision: int
     generated_at: datetime
@@ -86,12 +97,12 @@ class SystemSnapshot(BaseModel):
     feeder_limits_w: Dict[str, int]
     requested_mask: int
     modeled_mask: int
-    proposed_mask: int = 0
+    proposed_mask: int
     indicator_command_mask: Optional[int] = None
     indicator_confirmed_mask: Optional[int] = None
-    indicator_mask: Optional[int] = None
     hardware_link: HardwareLinkStatus
     services: List[ServiceSnapshot]
+    appliances: List[ApplianceSnapshot] = Field(default_factory=list)
     zones: Optional[FacilityZones] = None
     events: List[SystemEvent] = []
     fault_diagnosis: Optional[FaultDiagnosis] = None
@@ -146,7 +157,7 @@ class RfidScanRequest(BaseModel):
 
 class RfidScanResponse(BaseModel):
     accepted: bool
-    active_classroom_id: Optional[str] = None
+    active_classroom_ids: List[str] = Field(default_factory=list)
     classroom_name: Optional[str] = None
     service_id: Optional[str] = None
     event_type: RfidEventType

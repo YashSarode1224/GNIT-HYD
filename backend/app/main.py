@@ -253,7 +253,7 @@ async def process_rfid_scan(req: RfidScanRequest):
     evt_type, class_id, class_name, service_id = grid.process_rfid_scan(req.uid)
     return RfidScanResponse(
         accepted=True if evt_type != RfidEventType.DUPLICATE_SUPPRESSED.value else False,
-        active_classroom_id=class_id,
+        active_classroom_ids=class_id if isinstance(class_id, list) else ([class_id] if class_id else []),
         classroom_name=class_name,
         service_id=service_id,
         event_type=evt_type

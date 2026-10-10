@@ -7,11 +7,54 @@ from app.schemas.snapshot import (
     SystemSnapshot, SourceInfo, SourceKind, HardwareLinkStatus,
     ServiceSnapshot, Tier, FacilityZones, HospitalZone, HospitalRoom,
     ClassroomZone, ClassroomInfo, RfidReaderStatus, RfidEventType,
-    SystemEvent, FaultDiagnosis
+    SystemEvent, FaultDiagnosis, ApplianceSnapshot
 )
 from app.core.allocator import allocate, fixed_priority_mask
 from app.core.restoration import RestorationGate
 from app.activity.model import ActivityModel, FEATURES
+
+
+APPLIANCE_CATALOG = [
+    # ICU (L0 - 2000W total)
+    {"id": "icu_vent", "name": "Ventilator", "room": "ICU", "parent": "L0", "tier": "T1", "watts": 300},
+    {"id": "icu_mon", "name": "Patient Monitor", "room": "ICU", "parent": "L0", "tier": "T1", "watts": 100},
+    {"id": "icu_inf", "name": "Infusion Pump", "room": "ICU", "parent": "L0", "tier": "T1", "watts": 50},
+    {"id": "icu_light", "name": "Essential Lighting", "room": "ICU", "parent": "L0", "tier": "T1", "watts": 50},
+    {"id": "icu_o2", "name": "O2 System", "room": "ICU", "parent": "L0", "tier": "T1", "watts": 500},
+
+    # Theatre (L0 - 2000W total)
+    {"id": "the_surg", "name": "Surgical Lights", "room": "Theatre", "parent": "L0", "tier": "T1", "watts": 500},
+    {"id": "the_anes", "name": "Anesthesia Unit", "room": "Theatre", "parent": "L0", "tier": "T1", "watts": 200},
+    {"id": "the_vmon", "name": "Vital Monitor", "room": "Theatre", "parent": "L0", "tier": "T1", "watts": 100},
+
+    # Wards (L0 - 2000W total)
+    {"id": "war_call", "name": "Nurse Call", "room": "Wards", "parent": "L0", "tier": "T1", "watts": 100},
+    {"id": "war_pump", "name": "Pump", "room": "Wards", "parent": "L0", "tier": "T1", "watts": 100},
+
+    # L1: Emergency Lighting (1000W)
+    {"id": "emerg_light_1", "name": "ICU Emergency Light", "room": "ICU", "parent": "L1", "tier": "T1", "watts": 300},
+    {"id": "emerg_light_2", "name": "Theatre Emergency Light", "room": "Theatre", "parent": "L1", "tier": "T1", "watts": 400},
+    {"id": "emerg_light_3", "name": "Wards Emergency Light", "room": "Wards", "parent": "L1", "tier": "T1", "watts": 300},
+
+    # L2: Water Pump (3000W)
+    {"id": "hosp_pump_1", "name": "Main Water Pump", "room": "Wards", "parent": "L2", "tier": "T2", "watts": 3000},
+
+    # L3: CR1 (2000W)
+    {"id": "cr1_proj", "name": "Projector", "room": "CR1", "parent": "L3", "tier": "T2", "watts": 500},
+    {"id": "cr1_light", "name": "Lights", "room": "CR1", "parent": "L3", "tier": "T2", "watts": 500},
+    {"id": "cr1_fan", "name": "Fans", "room": "CR1", "parent": "L3", "tier": "T2", "watts": 1000},
+
+    # L4: CR2 (2000W)
+    {"id": "cr2_proj", "name": "Projector", "room": "CR2", "parent": "L4", "tier": "T2", "watts": 500},
+    {"id": "cr2_light", "name": "Lights", "room": "CR2", "parent": "L4", "tier": "T2", "watts": 500},
+    {"id": "cr2_fan", "name": "Fans", "room": "CR2", "parent": "L4", "tier": "T2", "watts": 1000},
+
+    # L5: CR3 (4000W)
+    {"id": "cr3_proj", "name": "Projector", "room": "CR3", "parent": "L5", "tier": "T3", "watts": 500},
+    {"id": "cr3_light", "name": "Lights", "room": "CR3", "parent": "L5", "tier": "T3", "watts": 1000},
+    {"id": "cr3_fan", "name": "Fans", "room": "CR3", "parent": "L5", "tier": "T3", "watts": 1000},
+    {"id": "cr3_comp", "name": "Computers", "room": "CR3", "parent": "L5", "tier": "T3", "watts": 1500},
+]
 
 SERVICE_CATALOG = [
     {"id": "L0", "name": "Hospital Essential Circuit", "tier": "T1", "feeder": "A", "watts": 2000, "zone": "hospital"},
@@ -62,7 +105,7 @@ class GridState:
         self.feeder_limits_w = {"A": 6000, "B": 8000}
         self.feeder_available = {"A": True, "B": True}
         self.control_revision = 0
-        self.active_classroom_id = None
+        self.active_classroom_ids = set()
         self.recent_rfid_scan = None
         self.last_rfid_scan_time = None
         self.last_rfid_uid = None
@@ -143,12 +186,12 @@ class GridState:
 
             classroom_id = self.rfid_map.get(uid)
             if not classroom_id:
-                self.active_classroom_id = None
+                self.active_classroom_ids = set()
                 self.control_revision += 1
                 self.add_event("RFID_SCAN", f"Unknown RFID card scanned: {uid}")
                 return RfidEventType.UNKNOWN_CARD.value, None, None, None
 
-            self.active_classroom_id = classroom_id
+            self.active_classroom_ids = {classroom_id}
             self.control_revision += 1
             
             classroom = next((c for c in CLASSROOMS if c["id"] == classroom_id), None)
@@ -254,13 +297,13 @@ class GridState:
                     mask |= (1 << room["led_bit"])
                     
             # Classroom logic
-            if self.active_classroom_id:
-                classroom = next((c for c in CLASSROOMS if c["id"] == self.active_classroom_id), None)
+            if self.active_classroom_ids:
+                classroom = next((c for c in CLASSROOMS if c["id"] in self.active_classroom_ids), None)
                 if classroom:
                     cr_svc = classroom["service_id"]
                     svc_bit = int(cr_svc[1:])
                     svc_served = bool((modeled_mask >> svc_bit) & 1)
-                    load_active = self.classroom_load_events.get(self.active_classroom_id, False)
+                    load_active = self.classroom_load_events.get(classroom["id"], False)
                     
                     cr_svc_obj = next((s for s in SERVICE_CATALOG if s["id"] == cr_svc), None)
                     feeder_avail = False
@@ -332,16 +375,54 @@ class GridState:
             zones = FacilityZones(
                 hospital=HospitalZone(rooms=hospital_rooms),
                 classroom=ClassroomZone(
-                    active_classroom_id=self.active_classroom_id,
+                    active_classroom_ids=list(self.active_classroom_ids),
                     recent_rfid_scan=self.recent_rfid_scan,
                     rfid_reader_status=RfidReaderStatus.NOT_CONNECTED,
                     classrooms=classroom_infos
                 )
             )
 
+            
+            appliances_out = []
+            for app in APPLIANCE_CATALOG:
+                is_requested = True
+                if app["room"] in ("CR1", "CR2", "CR3"):
+                    is_requested = app["room"] in self.active_classroom_ids
+
+                parent_svc = next((s for s in SERVICE_CATALOG if s["id"] == app["parent"]), None)
+                if not parent_svc:
+                    continue
+                    
+                bit = int(parent_svc["id"][1:])
+                served = bool((modeled_mask >> bit) & 1)
+                
+                if served:
+                    reason = "Served by allocation policy"
+                elif self.proposed_mask & (1 << bit):
+                    reason = "Waiting for simulated restoration delay"
+                elif not (requested_mask & (1 << bit)):
+                    reason = "No active load request (room offline)"
+                elif not self.feeder_available.get(parent_svc["feeder"], False):
+                    reason = f"Feeder {parent_svc['feeder']} unavailable"
+                else:
+                    reason = "Excluded by priority or capacity limits"
+
+                appliances_out.append(ApplianceSnapshot(
+                    id=app["id"],
+                    name=app["name"],
+                    room=app["room"],
+                    tier=app["tier"],
+                    watts=app["watts"],
+                    requested=is_requested,
+                    modeled_served=served,
+                    model_reason=reason
+                ))
+
             activity = self.current_activity()
 
+
             return SystemSnapshot(
+                appliances=appliances_out,
                 control_revision=self.control_revision,
                 generated_at=datetime.now(timezone.utc),
                 source=SourceInfo(kind=SourceKind.SIMULATED, capacity_w=self.source_capacity_w),

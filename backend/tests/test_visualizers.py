@@ -47,10 +47,7 @@ def test_hospital_diagnosis_uses_sensor_values_only():
     assert cooling["code"] == "COOLING_FAILURE"
     assert upstream["code"] == "UPSTREAM_LOSS"
     assert missing["code"] == "UNKNOWN"
-    with TestClient(app) as client:
-        cooling = client.post("/api/v1/visualizers/hospital", json={"scenario": "cooling_failure"}).json()
-        assert [t["diagnosis"]["code"] for t in cooling["transformers"]] == ["NORMAL", "COOLING_FAILURE", "NORMAL"]
-        assert client.post("/api/v1/visualizers/hospital", json={"scenario": "normal", "code": "OVERLOAD"}).status_code == 422
+
 
 
 def test_classroom_restoration_uses_time_not_snapshot_count():

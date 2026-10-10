@@ -6,7 +6,8 @@ import { ClassroomDemoActionName, ClassroomDemoRoom, ClassroomDemoSnapshot } fro
 import './ClassroomVisualizer.css';
 import ClassroomBlueprint from './ClassroomBlueprint';
 
-export default function ClassroomsDemo() {
+export default function ClassroomsDemo({ hideHeader }: { hideHeader?: boolean }) {
+  console.log(hideHeader);
   const [snapshot, setSnapshot] = useState<ClassroomDemoSnapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);

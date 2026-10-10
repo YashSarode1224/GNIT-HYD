@@ -41,7 +41,7 @@ export interface ClassroomInfo {
 }
 
 export interface ClassroomZone {
-  active_classroom_id: string | null;
+  active_classroom_ids: string[];
   recent_rfid_scan: string | null;
   rfid_reader_status: string;
   classrooms: ClassroomInfo[];
@@ -109,7 +109,20 @@ export interface ActivityObservation {
   source: "RECORDED_REPLAY" | "SIMULATED";
 }
 
+
+export interface ApplianceSnapshot {
+  id: string;
+  name: string;
+  room: string;
+  tier: string;
+  watts: number;
+  requested: boolean;
+  modeled_served: boolean;
+  model_reason: string;
+}
+
 export interface Snapshot {
+
   activity: Record<string, ActivityPrediction>;
   model: ModelStatus;
   replay: ReplayStatus;
@@ -126,8 +139,10 @@ export interface Snapshot {
   indicator_mask: number | null;
   hardware_link: string;
   services: Service[];
+  appliances?: ApplianceSnapshot[];
   zones?: FacilityZones;
   events?: SystemEvent[];
+  fault_diagnosis?: FaultDiagnosis;
 }
 
 export interface HealthResponse {
@@ -137,7 +152,7 @@ export interface HealthResponse {
 
 export interface RfidScanResponse {
   accepted: boolean;
-  active_classroom_id: string | null;
+  active_classroom_ids: string[];
   classroom_name: string | null;
   service_id: string | null;
   event_type: string;
@@ -287,3 +302,10 @@ export interface HospitalDemoSnapshot {
   policy: string;
 }
 
+
+export interface FaultDiagnosis {
+  has_fault: boolean;
+  diagnosis: string;
+  severity: string;
+  status: string;
+}

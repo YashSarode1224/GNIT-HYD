@@ -6,7 +6,8 @@ import { HospitalDemoActionName, HospitalDemoZone, HospitalDemoSnapshot } from '
 import './ClassroomVisualizer.css';
 import HospitalBlueprint from './HospitalBlueprint';
 
-export default function HospitalDemo() {
+export default function HospitalDemo({ hideHeader }: { hideHeader?: boolean }) {
+  console.log(hideHeader);
   const [snapshot, setSnapshot] = useState<HospitalDemoSnapshot | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);

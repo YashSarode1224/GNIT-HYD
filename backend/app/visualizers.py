@@ -304,6 +304,13 @@ class HospitalPriorityDemo(ClassroomDemo):
         return self.snapshot()
 
 
+
+HOSPITAL_LOADS = {
+    "ICU": [("icu_vent", True), ("icu_mon", True), ("icu_inf", True), ("icu_o2", True), ("icu_light", False)],
+    "Theatre": [("the_surg", True), ("the_anes", True), ("the_vmon", True), ("the_light", False), ("the_ac", False)],
+    "Wards": [("war_call", True), ("war_pump", True), ("war_light", False), ("war_ac", False)]
+}
+
 def hospital_snapshot(scenario="normal", zone="Theatre"):
     target_i = 2
     if zone == "ICU":

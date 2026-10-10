@@ -48,3 +48,43 @@ def fixed_priority_mask(services, capacity_w, feeder_limits, feeder_available, r
         if requested_mask & (1 << bit) and feasible(candidate, services, capacity_w, feeder_limits, feeder_available):
             mask = candidate
     return mask
+
+
+def allocate_appliances(appliances, capacity_w, feeder_limits, feeder_available, activity, active_classroom_ids):
+    """Greedy solver for individual appliances."""
+    # Build list of active appliances (requested)
+    requested = []
+    for app in appliances:
+        # Determine if requested based on room
+        room = app["room"]
+        is_requested = True
+        
+        # Classroom logic
+        if room in ("CR1", "CR2", "CR3"):
+            is_requested = (room in active_classroom_ids)
+            
+        if is_requested:
+            requested.append(app)
+            
+    # Sort greedily by Tier priority (T1 first, then T2, T3)
+    # Then by watts ascending to maximize count
+    requested.sort(key=lambda x: (
+        0 if x["tier"] == "T1" else 1 if x["tier"] == "T2" else 2,
+        x["watts"]
+    ))
+    
+    served_ids = set()
+    source_used = 0
+    feeder_used = {"A": 0, "B": 0}
+    
+    for app in requested:
+        feeder = app["feeder"]
+        if not feeder_available.get(feeder, False):
+            continue
+            
+        if source_used + app["watts"] <= capacity_w and feeder_used[feeder] + app["watts"] <= feeder_limits.get(feeder, 0):
+            served_ids.add(app["id"])
+            source_used += app["watts"]
+            feeder_used[feeder] += app["watts"]
+            
+    return served_ids

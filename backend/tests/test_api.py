@@ -48,7 +48,7 @@ def test_snapshot_backward_compatibility():
     assert "services" in data
     assert "requested_mask" in data
     assert "modeled_mask" in data
-    assert "indicator_mask" in data
+    assert "indicator_command_mask" in data
     assert "hardware_link" in data
 
     services = data["services"]
@@ -79,12 +79,12 @@ def test_rfid_registered_card_selection():
     # Scan Card 1 (CR1)
     response = client.post("/api/v1/rfid/scan", json={"uid": "CARD_1_UID"})
     assert response.status_code == 200
-    assert response.json()["active_classroom_id"] == "CR1"
+    assert response.json()["active_classroom_ids"] == ["CR1"]
     assert response.json()["event_type"] == "CARD_RECOGNIZED"
     
     # Check snapshot
     snap = client.get("/api/v1/snapshot").json()
-    assert snap["zones"]["classroom"]["active_classroom_id"] == "CR1"
+    assert snap["zones"]["classroom"]["active_classroom_ids"] == ["CR1"]
 
 def test_rfid_unknown_card_clears_selection():
     client.post("/api/v1/rfid/scan", json={"uid": "CARD_1_UID"})
@@ -92,11 +92,11 @@ def test_rfid_unknown_card_clears_selection():
     # Scan unknown card
     response = client.post("/api/v1/rfid/scan", json={"uid": "UNKNOWN_CARD_UID"})
     assert response.status_code == 200
-    assert response.json()["active_classroom_id"] is None
+    assert response.json()["active_classroom_ids"] == []
     assert response.json()["event_type"] == "UNKNOWN_CARD"
     
     snap = client.get("/api/v1/snapshot").json()
-    assert snap["zones"]["classroom"]["active_classroom_id"] is None
+    assert snap["zones"]["classroom"]["active_classroom_ids"] == []
 
 def test_duplicate_scan_suppressed():
     r1 = client.post("/api/v1/rfid/scan", json={"uid": "CARD_1_UID"})

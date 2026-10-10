@@ -405,3 +405,189 @@
   from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* New Tab Layout Styles */
+.tab-navigation {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tab-navigation button {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-navigation button:hover {
+  color: #334155;
+}
+
+.tab-navigation button.active {
+  color: #0f172a;
+  border-bottom-color: #0ea5e9;
+}
+
+.tab-content {
+  padding: 2rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Floorplan Tab */
+.floorplan-split {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Fault Detection Tab */
+.fault-detection-tab {
+  display: flex;
+  gap: 2rem;
+  height: 100%;
+}
+
+.fault-main-panel {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.fault-side-panel {
+  flex: 1;
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.fault-viz {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 1rem;
+}
+
+.fault-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fault-buttons button {
+  padding: 0.5rem;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fault-buttons button:hover {
+  background: #f1f5f9;
+}
+
+.diagnosis-card.err {
+  background: #fef2f2;
+  border: 1px solid #f87171;
+  padding: 1rem;
+  border-radius: 4px;
+  color: #991b1b;
+}
+
+.diagnosis-card.ok {
+  background: #f0fdf4;
+  border: 1px solid #4ade80;
+  padding: 1rem;
+  border-radius: 4px;
+  color: #166534;
+}
+
+/* Laws Tab */
+.laws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.law-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.law-card .formula {
+  font-size: 1.5rem;
+  font-family: monospace;
+  font-weight: bold;
+  color: #0284c7;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f0f9ff;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Laws Blueprint Styles */
+.law-blueprint-card {
+  background: #f5efdd;
+  border: 4px solid #747c76;
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: 4px 4px 0px rgba(198, 198, 188, 1);
+}
+
+.law-blueprint-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: linear-gradient(#e6dfcb 1px, transparent 1px), linear-gradient(90deg, #e6dfcb 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.blueprint-title {
+  position: relative;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: #1f2937;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #a4c7cf;
+}
+
+.blueprint-formula {
+  position: relative;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 2rem;
+  color: #52786a;
+  text-align: center;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: #fff;
+  border: 2px solid #52786a;
+}
+
+.law-blueprint-card p {
+  position: relative;
+  font-family: sans-serif;
+  color: #4b5563;
+  line-height: 1.6;
+}
